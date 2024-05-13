@@ -2,7 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class AnimationTest : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class AnimationTest : MonoBehaviour
     public float jumpForce;
     public CinemachineVirtualCamera gameplayCamera;
     public int yon;
+    public Slider healthSlider;
 
     public float rayUzunlugu = 10f; // Ray uzunluðu
     public Vector3 rayYonu = Vector3.forward; // Ray yönü
@@ -20,6 +21,7 @@ public class AnimationTest : MonoBehaviour
     Animator animator;
     bool isGrounded;
     bool isDeath=false;
+    float health = 1;
 
     private void Start()
     {
@@ -32,8 +34,18 @@ public class AnimationTest : MonoBehaviour
     {
         if (collision.gameObject.tag == "Engel")
         {
+            if (collision.gameObject.transform.position.x<transform.position.x)
+            {
+                rb.AddForce(new Vector2(0,1.3f)*jumpForce);
+            }
+            else
+            {
+                rb.AddForce(new Vector2(0, 1.3f) * jumpForce);
+            }
+            health -= 0.2f;
             Death();
         }
+        healthSlider.value = health;
     }
     private void Update()
     {
@@ -150,10 +162,13 @@ public class AnimationTest : MonoBehaviour
     }
     void Death() 
     {
-        rb.gravityScale = -0.7f;
-        animator.Play("Death");
-        gameplayCamera.enabled = false;
-        isDeath = true;
+        if (health<=0)
+        {
+            rb.gravityScale = -0.7f;
+            animator.Play("Death");
+            gameplayCamera.enabled = false;
+            isDeath = true;
+        }
     }
     public void ChangeDirection(int yeniYon)
     {
