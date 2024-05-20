@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AnimationTest : MonoBehaviour
@@ -47,12 +48,20 @@ public class AnimationTest : MonoBehaviour
         }
         healthSlider.value = health;
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag=="Sandik")
+        {
+            PlayerPrefs.SetInt("Level",PlayerPrefs.GetInt("Level")+1);
+            SceneManager.LoadScene(PlayerPrefs.GetInt("Level"));
+        }
+    }
     private void Update()
     {
         if (isDeath==false)
         {
-            //KeyboardMove();
-            UIMove();
+            KeyboardMove();
+            //UIMove();
         }
         GroundCheck();
     }
@@ -127,6 +136,7 @@ public class AnimationTest : MonoBehaviour
             rb.AddForce(Vector2.up * jumpForce);
 
         }
+        PlayerPrefs.SetInt("Level", SceneManager.GetActiveScene().buildIndex);
     }
     void GroundCheck()
     {
